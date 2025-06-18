@@ -1,0 +1,490 @@
+<!--
+Histórico de Versões:
+- Versão-0.0.00.0 (Data desconhecida): Versão inicial com seções Home, Plano de Saúde, Imóveis, Seguro de Vida, Área Administrativa e Vídeos separada.
+- Versão-0.0.00.1 (06/17/2025 - 22:03): 
+  - Integração de vídeos nos carrosséis de anúncios (Plano de Saúde, Imóveis, Seguro de Vida).
+  - Remoção da seção Vídeos e seu item de navegação.
+  - Unificação do gerenciamento de mídias (imagens e vídeos) na Área Administrativa com dropdown para tipo de mídia.
+  - Início do controle de versão incrementando o último dígito.
+- Versão-0.0.00.2 (06/17/2025 - 22:09):
+  - Reorganização do HTML para maior clareza e flexibilidade.
+  - Uso de classes semânticas e indentação consistente.
+  - Estrutura modular para facilitar adição de novos nichos.
+  - Manutenção de todas as funcionalidades existentes.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conquiste Novas Oportunidades</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .carousel-item { display: none; }
+    .carousel-item.active { display: block; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+    .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Navegação Principal -->
+  <nav class="bg-blue-600 text-white p-4">
+    <ul class="flex justify-center space-x-4">
+      <li><button onclick="showSection('home')" class="hover:underline">Início</button></li>
+      <li><button onclick="showSection('plano-saude')" class="hover:underline">Plano de Saúde</button></li>
+      <li><button onclick="showSection('imoveis')" class="hover:underline">Imóveis</button></li>
+      <li><button onclick="showSection('seguro-vida')" class="hover:underline">Seguro de Vida</button></li>
+      <li><button onclick="showAdminLogin()" class="hover:underline">Área Administrativa</button></li>
+    </ul>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-grow">
+    <!-- Seção Início -->
+    <section id="home" class="section active flex items-center justify-center py-8">
+      <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Bem-vindo ao Conquiste Novas Oportunidades</h1>
+        <p class="text-gray-600 mb-6">Escolha uma categoria para explorar nossas soluções!</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <button onclick="showSection('plano-saude')" class="bg-blue-600 text-white p-4 rounded-md hover:bg-blue-700 transition">Plano de Saúde</button>
+          <button onclick="showSection('imoveis')" class="bg-blue-600 text-white p-4 rounded-md hover:bg-blue-700 transition">Imóveis</button>
+          <button onclick="showSection('seguro-vida')" class="bg-blue-600 text-white p-4 rounded-md hover:bg-blue-700 transition">Seguro de Vida</button>
+          <button onclick="showAdminLogin()" class="bg-blue-600 text-white p-4 rounded-md hover:bg-blue-700 transition">Área Administrativa</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Plano de Saúde -->
+    <section id="plano-saude" class="section flex flex-col items-center">
+      <div class="w-full bg-blue-100 py-4">
+        <div class="max-w-4xl mx-auto">
+          <div id="carousel-plano-saude" class="relative"></div>
+        </div>
+      </div>
+      <div class="flex-grow flex items-center justify-center py-8">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+          <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Plano de Saúde</h2>
+          <p class="text-center text-gray-600 mb-6">Preencha para receber as melhores ofertas!</p>
+          <form id="form-plano-saude" class="space-y-4" onsubmit="handleLeadSubmit(event, 'plano-saude')">
+            <div>
+              <label for="name-plano-saude" class="block text-sm font-medium text-gray-700">Nome</label>
+              <input type="text" id="name-plano-saude" name="name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome">
+            </div>
+            <div>
+              <label for="email-plano-saude" class="block text-sm font-medium text-gray-700">E-mail</label>
+              <input type="email" id="email-plano-saude" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu e-mail">
+            </div>
+            <div>
+              <label for="phone-plano-saude" class="block text-sm font-medium text-gray-700">Telefone</label>
+              <input type="tel" id="phone-plano-saude" name="phone" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="(XX) XXXXX-XXXX">
+            </div>
+            <div>
+              <label for="plan-type" class="block text-sm font-medium text-gray-700">Tipo de Plano</label>
+              <select id="plan-type" name="plan-type" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                <option value="Individual">Individual</option>
+                <option value="Familiar">Familiar</option>
+                <option value="Empresarial">Empresarial</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Enviar</button>
+          </form>
+          <p id="success-plano-saude" class="text-green-600 text-center mt-4 hidden">Obrigado! Seus dados foram enviados!</p>
+          <p id="error-plano-saude" class="text-red-600 text-center mt-4 hidden">Ocorreu um erro. Tente novamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Imóveis -->
+    <section id="imoveis" class="section flex flex-col items-center">
+      <div class="w-full bg-blue-100 py-4">
+        <div class="max-w-4xl mx-auto">
+          <div id="carousel-imoveis" class="relative"></div>
+        </div>
+      </div>
+      <div class="flex-grow flex items-center justify-center py-8">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+          <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Imóveis</h2>
+          <p class="text-center text-gray-600 mb-6">Encontre o imóvel dos seus sonhos!</p>
+          <form id="form-imoveis" class="space-y-4" onsubmit="handleLeadSubmit(event, 'imoveis')">
+            <div>
+              <label for="name-imoveis" class="block text-sm font-medium text-gray-700">Nome</label>
+              <input type="text" id="name-imoveis" name="name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome">
+            </div>
+            <div>
+              <label for="email-imoveis" class="block text-sm font-medium text-gray-700">E-mail</label>
+              <input type="email" id="email-imoveis" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu e-mail">
+            </div>
+            <div>
+              <label for="phone-imoveis" class="block text-sm font-medium text-gray-700">Telefone</label>
+              <input type="tel" id="phone-imoveis" name="phone" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="(XX) XXXXX-XXXX">
+            </div>
+            <div>
+              <label for="location" class="block text-sm font-medium text-gray-700">Localidade Desejada</label>
+              <select id="location" name="location" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                <option value="São Paulo">São Paulo</option>
+                <option value="Rio de Janeiro">Rio de Janeiro</option>
+                <option value="Belo Horizonte">Belo Horizonte</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Enviar</button>
+          </form>
+          <p id="success-imoveis" class="text-green-600 text-center mt-4 hidden">Obrigado! Seus dados foram enviados!</p>
+          <p id="error-imoveis" class="text-red-600 text-center mt-4 hidden">Ocorreu um erro. Tente novamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Seguro de Vida -->
+    <section id="seguro-vida" class="section flex flex-col items-center">
+      <div class="w-full bg-blue-100 py-4">
+        <div class="max-w-4xl mx-auto">
+          <div id="carousel-seguro-vida" class="relative"></div>
+        </div>
+      </div>
+      <div class="flex-grow flex items-center justify-center py-8">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+          <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Seguro de Vida</h2>
+          <p class="text-center text-gray-600 mb-6">Garanta a segurança da sua família!</p>
+          <form id="form-seguro-vida" class="space-y-4" onsubmit="handleLeadSubmit(event, 'seguro-vida')">
+            <div>
+              <label for="name-seguro-vida" class="block text-sm font-medium text-gray-700">Nome</label>
+              <input type="text" id="name-seguro-vida" name="name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome">
+            </div>
+            <div>
+              <label for="email-seguro-vida" class="block text-sm font-medium text-gray-700">E-mail</label>
+              <input type="email" id="email-seguro-vida" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu e-mail">
+            </div>
+            <div>
+              <label for="phone-seguro-vida" class="block text-sm font-medium text-gray-700">Telefone</label>
+              <input type="tel" id="phone-seguro-vida" name="phone" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="(XX) XXXXX-XXXX">
+            </div>
+            <div>
+              <label for="insurance-type" class="block text-sm font-medium text-gray-700">Tipo de Seguro</label>
+              <select id="insurance-type" name="insurance-type" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                <option value="Individual">Individual</option>
+                <option value="Familiar">Familiar</option>
+                <option value="Empresarial">Empresarial</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Enviar</button>
+          </form>
+          <p id="success-seguro-vida" class="text-green-600 text-center mt-4 hidden">Obrigado! Seus dados foram enviados!</p>
+          <p id="error-seguro-vida" class="text-red-600 text-center mt-4 hidden">Ocorreu um erro. Tente novamente.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de Login Administrativo -->
+  <div id="adminLoginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Acesso Administrativo</h2>
+      <form id="adminLoginForm" class="space-y-4" onsubmit="handleAdminLogin(event)">
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
+          <input type="text" id="username" name="username" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+          <input type="password" id="password" name="password" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Entrar</button>
+      </form>
+      <p id="loginError" class="text-red-600 text-center mt-4 hidden">Usuário ou senha inválidos.</p>
+      <button onclick="closeAdminLogin()" class="mt-4 text-blue-600 hover:underline">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Área Administrativa -->
+  <div id="adminArea" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Painel Administrativo</h2>
+
+      <!-- Seleção de Categoria -->
+      <div class="mb-6">
+        <label for="category-select" class="block text-sm font-medium text-gray-700">Selecione a Categoria</label>
+        <select id="category-select" onchange="loadLeads(); loadAds();" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+          <option value="plano-saude">Plano de Saúde</option>
+          <option value="imoveis">Imóveis</option>
+          <option value="seguro-vida">Seguro de Vida</option>
+        </select>
+      </div>
+
+      <!-- Gerenciamento de Leads -->
+      <h3 class="text-lg font-semibold mb-2">Leads Capturados</h3>
+      <table class="w-full text-left border-collapse mb-6">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2 border">Nome</th>
+            <th class="p-2 border">E-mail</th>
+            <th class="p-2 border">Telefone</th>
+            <th class="p-2 border">Detalhe</th>
+            <th class="p-2 border">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTable"></tbody>
+      </table>
+      <button onclick="downloadReport()" class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 mb-6">Baixar Relatório (CSV)</button>
+
+      <!-- Gerenciamento de Mídias -->
+      <h3 class="text-lg font-semibold mb-2">Adicionar Nova Mídia</h3>
+      <form id="adForm" class="space-y-4 mb-6" onsubmit="handleAdSubmit(event)">
+        <div>
+          <label for="media-type" class="block text-sm font-medium text-gray-700">Tipo de Mídia</label>
+          <select id="media-type" name="media-type" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+            <option value="image">Imagem (800x200)</option>
+            <option value="video">Vídeo (YouTube Embed ou MP4)</option>
+          </select>
+        </div>
+        <div>
+          <label for="adUrl" class="block text-sm font-medium text-gray-700">URL da Mídia</label>
+          <input type="url" id="adUrl" name="adUrl" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="https://exemplo.com/imagem.jpg ou https://www.youtube.com/embed/videoID">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Adicionar Mídia</button>
+      </form>
+      <h3 class="text-lg font-semibold mb-2">Mídias Ativas</h3>
+      <div id="adsList" class="grid grid-cols-1 gap-4 mb-6"></div>
+
+      <button onclick="closeAdminArea()" class="mt-6 bg-red-600 text-white p-2 rounded-md hover:bg-red-700">Sair</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Configuração de Nichos
+    const niches = {
+      'plano-saude': {
+        title: 'Plano de Saúde',
+        detailLabel: 'Tipo de Plano',
+        detailOptions: ['Individual', 'Familiar', 'Empresarial']
+      },
+      'imoveis': {
+        title: 'Imóveis',
+        detailLabel: 'Localidade Desejada',
+        detailOptions: ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte']
+      },
+      'seguro-vida': {
+        title: 'Seguro de Vida',
+        detailLabel: 'Tipo de Seguro',
+        detailOptions: ['Individual', 'Familiar', 'Empresarial']
+      }
+    };
+
+    // Gerenciamento de Seções
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      document.title = `Conquiste Novas Oportunidades - ${sectionId === 'home' ? 'Início' : niches[sectionId].title}`;
+    }
+
+    // Carrossel de Mídias
+    const carousels = {
+      'plano-saude': { element: document.getElementById('carousel-plano-saude'), currentSlide: 0 },
+      'imoveis': { element: document.getElementById('carousel-imoveis'), currentSlide: 0 },
+      'seguro-vida': { element: document.getElementById('carousel-seguro-vida'), currentSlide: 0 }
+    };
+
+    function showSlide(category) {
+      const carousel = carousels[category];
+      const slides = carousel.element.querySelectorAll('.carousel-item');
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === carousel.currentSlide));
+    }
+
+    function nextSlide(category) {
+      const carousel = carousels[category];
+      const slides = carousel.element.querySelectorAll('.carousel-item');
+      carousel.currentSlide = (carousel.currentSlide + 1) % slides.length;
+      showSlide(category);
+    }
+
+    function initCarousel(category) {
+      const carousel = carousels[category].element;
+      let ads = JSON.parse(localStorage.getItem(`ads-${category}`) || '[]');
+      if (ads.length === 0) {
+        ads = [
+          { type: 'image', url: `https://via.placeholder.com/800x200?text=${category.replace('-', '+')}+1` },
+          { type: 'image', url: `https://via.placeholder.com/800x200?text=${category.replace('-', '+')}+2` },
+          { type: 'video', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+        ];
+        localStorage.setItem(`ads-${category}`, JSON.stringify(ads));
+      }
+      carousel.innerHTML = '';
+      ads.forEach((ad, i) => {
+        const div = document.createElement('div');
+        div.className = `carousel-item ${i === 0 ? 'active' : ''}`;
+        div.innerHTML = ad.type === 'image' ? 
+          `<img src="${ad.url}" alt="Mídia ${i + 1}" class="w-full h-48 object-cover rounded-md">` :
+          `<div class="video-container">${
+            ad.url.includes('youtube.com') || ad.url.includes('vimeo.com') ? 
+              `<iframe src="${ad.url}" frameborder="0" allowfullscreen></iframe>` : 
+              `<video controls><source src="${ad.url}" type="video/mp4"></video>`
+          }</div>`;
+        carousel.appendChild(div);
+      });
+      carousels[category].currentSlide = 0;
+      showSlide(category);
+    }
+
+    Object.keys(carousels).forEach(category => {
+      initCarousel(category);
+      setInterval(() => nextSlide(category), 5000);
+    });
+
+    // Manipulação de Leads
+    function handleLeadSubmit(event, category) {
+      event.preventDefault();
+      const form = event.target;
+      const successMessage = document.getElementById(`success-${category}`);
+      const errorMessage = document.getElementById(`error-${category}`);
+      const formData = new FormData(form);
+      const lead = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        detail: formData.get(category === 'imoveis' ? 'location' : category === 'plano-saude' ? 'plan-type' : 'insurance-type'),
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        let leads = JSON.parse(localStorage.getItem(`leads-${category}`) || '[]');
+        leads.push(lead);
+        localStorage.setItem(`leads-${category}`, JSON.stringify(leads));
+        successMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        form.reset();
+        setTimeout(() => successMessage.classList.add('hidden'), 3000);
+      } catch (error) {
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+      }
+    }
+
+    // Controle da Área Administrativa
+    function showAdminLogin() {
+      document.getElementById('adminLoginModal').classList.remove('hidden');
+    }
+
+    function closeAdminLogin() {
+      document.getElementById('adminLoginModal').classList.add('hidden');
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('adminLoginForm').reset();
+    }
+
+    function handleAdminLogin(event) {
+      event.preventDefault();
+      const form = event.target;
+      const username = form.querySelector('#username').value;
+      const password = form.querySelector('#password').value;
+      const loginError = document.getElementById('loginError');
+
+      if (username === 'admin' && password === 'senha123') {
+        document.getElementById('adminLoginModal').classList.add('hidden');
+        document.getElementById('adminArea').classList.remove('hidden');
+        loadLeads();
+        loadAds();
+        loginError.classList.add('hidden');
+      } else {
+        loginError.classList.remove('hidden');
+      }
+    }
+
+    function closeAdminArea() {
+      document.getElementById('adminArea').classList.add('hidden');
+    }
+
+    // Carregar Leads
+    function loadLeads() {
+      const category = document.getElementById('category-select').value;
+      const leadsTable = document.getElementById('leadsTable');
+      const leads = JSON.parse(localStorage.getItem(`leads-${category}`) || '[]');
+      leadsTable.innerHTML = '';
+      leads.forEach((lead, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-2 border">${lead.name}</td>
+          <td class="p-2 border">${lead.email}</td>
+          <td class="p-2 border">${lead.phone}</td>
+          <td class="p-2 border">${lead.detail}</td>
+          <td class="p-2 border">
+            <button onclick="deleteLead(${index}, '${category}')" class="text-red-600 hover:underline">Excluir</button>
+          </td>
+        `;
+        leadsTable.appendChild(row);
+      });
+    }
+
+    // Excluir Lead
+    function deleteLead(index, category) {
+      let leads = JSON.parse(localStorage.getItem(`leads-${category}`) || '[]');
+      leads.splice(index, 1);
+      localStorage.setItem(`leads-${category}`, JSON.stringify(leads));
+      loadLeads();
+    }
+
+    // Baixar Relatório
+    function downloadReport() {
+      const category = document.getElementById('category-select').value;
+      const detailLabel = niches[category].detailLabel;
+      const leads = JSON.parse(localStorage.getItem(`leads-${category}`) || '[]');
+      const csv = [`Nome,Email,Telefone,${detailLabel},Data`];
+      leads.forEach(lead => csv.push(`${lead.name},${lead.email},${lead.phone},${lead.detail},${lead.timestamp}`));
+      const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio_leads_${category}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Manipulação de Mídias
+    function handleAdSubmit(event) {
+      event.preventDefault();
+      const category = document.getElementById('category-select').value;
+      const form = event.target;
+      const mediaType = form.querySelector('#media-type').value;
+      const adUrl = form.querySelector('#adUrl').value;
+      let ads = JSON.parse(localStorage.getItem(`ads-${category}`) || '[]');
+      ads.push({ type: mediaType, url: adUrl });
+      localStorage.setItem(`ads-${category}`, JSON.stringify(ads));
+      initCarousel(category);
+      loadAds();
+      form.reset();
+    }
+
+    // Carregar Mídias na Área Admin
+    function loadAds() {
+      const category = document.getElementById('category-select').value;
+      const adsList = document.getElementById('adsList');
+      const ads = JSON.parse(localStorage.getItem(`ads-${category}`) || '[]');
+      adsList.innerHTML = '';
+      ads.forEach((ad, index) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2 border rounded-md';
+        div.innerHTML = `
+          ${ad.type === 'image' ? 
+            `<img src="${ad.url}" alt="Mídia ${index + 1}" class="w-32 h-16 object-cover rounded">` :
+            `<div class="video-container w-32 h-16">${
+              ad.url.includes('youtube.com') || ad.url.includes('vimeo.com') ? 
+                `<iframe src="${ad.url}" frameborder="0" allowfullscreen></iframe>` : 
+                `<video controls><source src="${ad.url}" type="video/mp4"></video>`
+            }</div>`}
+          <button onclick="deleteAd(${index}, '${category}')" class="text-red-600 hover:underline">Excluir</button>
+        `;
+        adsList.appendChild(div);
+      });
+    }
+
+    // Excluir Mídia
+    function deleteAd(index, category) {
+      let ads = JSON.parse(localStorage.getItem(`ads-${category}`) || '[]');
+      ads.splice(index, 1);
+      localStorage.setItem(`ads-${category}`, JSON.stringify(ads));
+      initCarousel(category);
+      loadAds();
+    }
+  </script>
+</body>
+</html>
